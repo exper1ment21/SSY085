@@ -12,4 +12,4 @@ G_uav = 1;
 R_max = 6000;
 pathLoss_max = G_uav*G_bs*(lambda_c/(4*pi*R_max))^2;
 
-stuff
+stuff = 5
