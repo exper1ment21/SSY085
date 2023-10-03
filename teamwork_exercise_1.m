@@ -25,15 +25,12 @@ G_uav = 1;
 R_max = 6000;
 pathLoss_max = G_uav*G_bs*(lambda_c/(4*pi*R_max))^2;
 
-delta_h = 100; 
-d = sqrt(R_max^2-delta_h^2);
-
 rainLoss_dB = -1; % dB/km
 pathLoss_max = pathLoss_max*(10^(rainLoss_dB/10))^(R_max/1000);
 
 F_dB = 13;
 F = 10^(F_dB/10);
-SNR_out_dB = 7;
+SNR_out_dB = 10; % change s.t Eb/N0 = 7 dB => SNR = 10 dB 
 SNR_out = 10^(SNR_out_dB/10);
 SNR_in = F*SNR_out; % SNR_in = P_rec/N_in = P_rec/(k*B*T0)
 
@@ -44,11 +41,10 @@ N_in = k*290*B;
 % P_t = SNR_in*N_in/PL
 P_t = SNR_in*N_in/pathLoss_max;
 
-squareCellSize = (sqrt(2)*d)^2;
 totalArea = 400*60*10^6 + 60*60*10^6;
 
-a = d*cosd(30);
-h = a*tand(60);
-At = a*h;
-numberOfTriangles = totalArea/At;
-numberOfBS = numberOfTriangles/2;
+delta_h = 100; 
+d = sqrt(R_max^2-delta_h^2);
+a_hex = sqrt(3/4)*d;
+A_hex = 3*a_hex*d;
+numberOfBS = totalArea/A_hex;

@@ -33,7 +33,7 @@ pathLoss_max = pathLoss_max*(10^(rainLoss_dB/10))^(R_max/1000);
 
 F_dB = 13;
 F = 10^(F_dB/10);
-SNR_out_dB = 7;
+SNR_out_dB = 10; % change s.t Eb/N0 = 7 dB => SNR = 10 dB 
 SNR_out = 10^(SNR_out_dB/10);
 SNR_in = F*SNR_out; % SNR_in = P_rec/N_in = P_rec/(k*B*T0)
 
@@ -46,6 +46,13 @@ P_t = SNR_in*N_in/pathLoss_max;
 
 squareCellSize = (sqrt(2)*d)^2;
 totalArea = 400*60*10^6 + 60*60*10^6;
-numberOfBS = totalArea/squareCellSize;
 
-a = 
+a = d*cosd(30);
+h = a*tand(60);
+At = a*h;
+numberOfTriangles = totalArea/At;
+numberOfBS = numberOfTriangles/2;
+
+a_hex = sqrt(3/4)*d;
+A_hex = 3*a_hex*d;
+numberOfHex = totalArea/A_hex;
