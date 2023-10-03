@@ -43,3 +43,12 @@ N_in = k*290*B;
 % SNR_in = P_rec/N_in, P_rec = SNR_in*N_in = P_t*PL
 % P_t = SNR_in*N_in/PL
 P_t = SNR_in*N_in/pathLoss_max;
+
+squareCellSize = (sqrt(2)*d)^2;
+totalArea = 400*60*10^6 + 60*60*10^6;
+
+a = d*cosd(30);
+h = a*tand(60);
+At = a*h;
+numberOfTriangles = totalArea/At;
+numberOfBS = numberOfTriangles/2;
