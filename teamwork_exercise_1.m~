@@ -22,11 +22,11 @@ lambda_c = c/f_c;
 
 G_bs = (4*pi)/lambda_c^2*Ae_bs;
 G_uav = 1;
-R_max = 23.2*1000;
-pathLoss_max = G_uav*G_bs*(lambda_c/(4*pi*R_max))^2;
+R_max = 31*1000;
+PL = G_uav*G_bs*(lambda_c/(4*pi*R_max))^2;
 
 rainLoss_dB = -0.1; % dB/km
-pathLoss_max = pathLoss_max*(10^(rainLoss_dB/10))^(R_max/1000);
+PL = PL*(10^(rainLoss_dB/10))^(R_max/1000);
 
 F_dB = 13;
 F = 10^(F_dB/10);
@@ -39,9 +39,7 @@ N_in = k*290*B;
 
 % SNR_in = P_rec/N_in, P_rec = SNR_in*N_in = P_t*PL
 % P_t = SNR_in*N_in/PL
-P_t = SNR_in*N_in/pathLoss_max;
-
-totalArea = 400*60*10^6 + 60*60*10^6;
+P_t = SNR_in*N_in/PL;
 
 delta_h = 100; 
 d_cov = sqrt(R_max^2-delta_h^2);
@@ -49,4 +47,42 @@ d_cov = sqrt(R_max^2-delta_h^2);
 N_y = @(d_cov,L_b) ceil(L_b/(2*d_cov*cosd(30))+1/2);
 N_x = @(d_cov,L_a) ceil((L_a-d_cov*sind(30))/(3*d_cov*sind(30)));
 
-N_y1 = N_y(d_)
+N_x1 = N_x(d_cov,400*1000);
+N_y1 = N_y(d_cov,60*1000);
+
+N_x2 = N_x(d_cov,60*1000);
+N_y2 = N_y(d_cov,60*1000);
+
+numberOfBS = N_x1*N_y1+N_x2*N_y2;
+
+%%
+clear
+clc
+B = 4*10^6*2.1/4;
+Ae_bs = 1;
+f_c = 5*10^9;
+c = 3*10^8;
+lambda_c = c/f_c;
+(2/lambda_c)^2
+G_bs = (4*pi)/lambda_c^2*Ae_bs;
+G_uav = 1;
+
+F_dB = 13;
+F = 10^(F_dB/10);
+SNR_out_dB = 10; % change s.t Eb/N0 = 7 dB => SNR = 10 dB 
+SNR_out = 10^(SNR_out_dB/10);
+SNR_in = F*SNR_out; % SNR_in = P_rec/N_in = P_rec/(k*B*T0)
+k = 1.38*10^(-23);
+N_in = k*290*B;
+
+L_atm = 0.1; % atmospheric loss dB/km
+
+P_t = 0.04;
+
+PL = 10*log10(SNR_in*N_in/P_t); % Wanted path loss 
+C = 10*log10(G_uav*G_bs*(lambda_c/(4*pi))^2);
+
+PL_func = @(R) C-20*log10(R)-R/1000*L_atm-PL;
+
+R = 1000*linspace(10,100,91);
+[I,~] = min(PL_func())
