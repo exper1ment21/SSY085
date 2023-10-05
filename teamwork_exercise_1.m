@@ -22,7 +22,7 @@ lambda_c = c/f_c;
 
 G_bs = (4*pi)/lambda_c^2*Ae_bs;
 G_uav = 1;
-R_max = 31*1000;
+R_max = 12*1000;
 PL = G_uav*G_bs*(lambda_c/(4*pi*R_max))^2;
 
 rainLoss_dB = -0.1; % dB/km
@@ -89,7 +89,7 @@ delta_h = 100;
 d_cov = sqrt(R_max^2-delta_h^2);
 
 N_y = @(d_cov,L_b) ceil(L_b/(2*d_cov*cosd(30))+1/2);
-N_x = @(d_cov,L_a) ceil((L_a-d_cov*sind(30))/(3*d_cov*sind(30)));
+N_x = @(d_cov,L_a) ceil((L_a+d_cov*sind(30))/(3*d_cov*sind(30)));
 
 % First rectangle
 N_x1 = N_x(d_cov,400*1000);
